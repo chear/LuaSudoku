@@ -42,6 +42,7 @@ end
 
 function VerifySudoku()
 	local square = {};
+	local times = 1;
 	local verticals = {};
 	-- count the horizon of 'Result'
 	for i=1 ,NUMBER do
@@ -49,13 +50,14 @@ function VerifySudoku()
 		local square_number=1;
 		local horizon = {};
 		horizon = Result[i];
-		if not AddtionNumberForArray(horizon) then
-			print("verify failed");
-			return false;
-		end
+--~ 		if not AddtionNumberForArray(horizon) then
+--~ 			print("verify failed");
+--~ 			return false;
+--~ 		end
 
-		-- dump and count vertical array from 'Result'
+
 		for k in ipairs(horizon) do
+			-- dump vertical array from 'Result'
 			if verticals[k]==nil then
 				local var = {};
 				var[i]= horizon[k];
@@ -64,10 +66,13 @@ function VerifySudoku()
 				table.insert(verticals[k],horizon[k]);
 			end
 
-			if(square[square_number] ==nil) then
-				local var = {};
+			-- dump square array from 'Result'
+			if(math.floor((k-1)/3+1)+math.floor((i-1)/3)*3) ==nil then
+				local squ = {};
+				squ[i]= horizon[k];
+				table.insert(verticals,var);
 			else
-
+				table.insert(verticals[k],horizon[k]);
 			end
 		end
 	end  -- end horizon
@@ -81,8 +86,18 @@ function VerifySudoku()
 --~ 		end
 --~ 	end
 
-	-- count the squ of 'Result'
-
+	-- count the square of 'Result'
+	for j in ipairs(square) do
+		str ="";
+		for p in ipairs(square[j]) do
+			str=str.."|"..square_number[j][p];
+		end
+--~ 		local list = {};
+--~ 		if not AddtionNumberForArray(list) then
+--~ 			print("verify failed");
+--~ 			return false;
+--~ 		end
+	end
 
 end  -- end VerifySudoku
 
@@ -110,9 +125,16 @@ function print_r(arr, indentLevel)
     return str
 end
 
---~ VerifySudoku();
+VerifySudoku();
 
-print(((6-1)%3)+1+3*1);
+--~ for i=1,NUMBER do
+--~ 	local str = ""
+--~ 	for j=1,NUMBER do
+--~ 		str=str.."|"..math.floor((j-1)/3+1)+math.floor((i-1)/3)*3;
+--~ 	end
+--~ 	print(str);
+--~ end
+
 
 ------------------------------------
 -- 			  test codeing 	   	  --
