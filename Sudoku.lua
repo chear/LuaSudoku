@@ -8,7 +8,7 @@ local G = {3,9,4,7,0,0,5,0,0};
 local H = {5,1,0,0,0,4,0,7,0};
 local I = {7,2,0,0,9,5,4,0,6};
 
-local Result ={{1,2,3,4,5,6,7,8,9},{9,8,7,6,5,4,3,2,1},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},
+local Result ={{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0}};
 
 local sudoku = 45;
@@ -27,20 +27,23 @@ function AddtionNumberForArray(Array)
 	end
 end
 
-function VerifySudoku()
+function VerifySudoku(Verifysudoku)
 	local square = {};
 	local times = 1;
 	local verticals = {};
+
+	if(#Verifysudoku ~= NUMBER) then
+		print("count of 'Verifysudoku' its not 9  ");
+		return false;
+	end
 	-- count the horizon of 'Result'
 	for i=1 ,NUMBER do
-		local square_number=1;
 		local horizon = {};
-		horizon = Result[i];
---~ 		if not AddtionNumberForArray(horizon) then
---~ 			print("verify failed");
---~ 			return false;
---~ 		end
-
+		horizon = Verifsudoku[i];
+		if not AddtionNumberForArray(horizon) then
+			print("verify failed");
+			return false;
+		end
 
 		for k in ipairs(horizon) do
 			-- dump vertical array from 'Result'
@@ -59,31 +62,27 @@ function VerifySudoku()
 				local squ = {};
 				squ[1]= horizon[k];
 				table.insert(square,squ);
-				print("new");
 			else
 				table.insert(square[number],horizon[k]);
-				print("insert");
 			end
 		end
 		print_r(square);
 	end  -- end horizon
 
 	-- count the vertial of 'Result'
---~ 	for j in ipairs(verticals) do
---~ 		local list = {};
---~ 		if not AddtionNumberForArray(list) then
---~ 			print("verify failed");
---~ 			return false;
---~ 		end
---~ 	end
+	for j in ipairs(verticals) do
+		local list = {};
+		list = verticals[j];
+		if not AddtionNumberForArray(list) then
+			print("verify failed");
+			return false;
+		end
+	end
 
 	-- count the square of 'Result'
 	for j in ipairs(square) do
---~		str ="";
---~		for p in ipairs(square[j]) do
---~			str=str.."|"..square[j][p];
---~		end
  		local list = {};
+		list = square[j];
  		if not AddtionNumberForArray(list) then
  			print("verify failed");
  			return false;
@@ -116,23 +115,129 @@ function print_r(arr, indentLevel)
     return str
 end
 
-VerifySudoku();
 
-function main()
-	local sudoku={};
-	table.insert(sudoku,A);
-	table.insert(sudoku,B);
-	table.insert(sudoku,C);
-	table.insert(sudoku,D);
-	table.insert(sudoku,E);
-	table.insert(sudoku,F);
-	table.insert(sudoku,G);
-	table.insert(sudoku,H);
-	table.insert(sudoku,I);
-	
-	
+function GetNumber(List )
+	for v in ipairs(List) do
+		if List[v]~=0 then
+			return v;
+		end
+	end
 end
 
+
+function VerifySameNumber(List,Num)
+	for i in ipairs(List) do
+		if List[i]==Num then
+			return true;
+		end
+	end
+	return false
+end -- end VerifySameNumber
+
+
+function PrintSudoku(Array)
+	-- print this array
+	print("begin print .... ");
+	for i in ipairs(Array) do
+		local str ="";
+		for p in ipairs(Array[i]) do
+			v = (p-1)%3+1;
+			if v==3 then
+				str=str..Array[i][p].."|";
+			else
+				str=str..Array[i][p].." ";
+			end
+		end
+		print(str);
+		if ((i-1)%3+1)==3 then
+			print("------------------");
+		end
+	end
+	print("end");
+end --end PrintSudoku
+
+ ---------------------------------
+ --		Main function			--
+ ---------------------------------
+
+ function main()
+
+	local SUDOKU={};
+	table.insert(SUDOKU,A);
+	table.insert(SUDOKU,B);
+	table.insert(SUDOKU,C);
+	table.insert(SUDOKU,D);
+	table.insert(SUDOKU,E);
+	table.insert(SUDOKU,F);
+	table.insert(SUDOKU,G);
+	table.insert(SUDOKU,H);
+	table.insert(SUDOKU,I);
+
+	-- inititalize
+	local SquaresNumber={{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
+	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
+	local VerticalsNumber = {{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
+	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
+	local HorizonsNumber = {{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
+	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
+
+	print("------------------");
+	for i in ipairs(SUDOKU) do
+		for j=1,NUMBER do
+			local n = SUDOKU[i][j];
+			if n~=0 then
+				-- fill data to 'HorizonsNumber'
+				HorizonsNumber[i][n] = 0;
+				VerticalsNumber[j][n] = 0;
+
+				local num = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
+				SquaresNumber[num][n] =0;
+			end
+		end
+	end	  -- end inititalize
+
+	-- process fill 'SUDOKU'
+	Result = SUDOKU;
+
+	PrintSudoku(Result);
+
+	while(true) do
+		for i in ipairs(Result) do
+			for j in ipairs(Result[i]) do
+
+				local n = Result[i][j];
+				-- if the grid is empty
+				if(n==0) then
+					-- get number from array.
+					for k in ipairs(HorizonsNumber[i]) do
+						local num = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
+						local ho = HorizonsNumber[i][k];
+						if ho~=0 and (VerifySameNumber(VerticalsNumber[j],ho ) or VerifySameNumber(SquaresNumber[num],ho )) then
+							print("i="..i..",j="..j..",ho="..ho);
+							HorizonsNumber[i][k] = 0;
+							VerticalsNumber[j][ho]=0;
+							SquaresNumber[num][ho]=0;
+							Result[i][j] = ho;
+							break;
+						end
+					end
+				end
+			end
+		end --end
+
+		-- verify SUDOKU
+		PrintSudoku(Result);
+		PrintSudoku(HorizonsNumber);
+		PrintSudoku(VerticalsNumber);
+		PrintSudoku(SquaresNumber);
+		break;
+
+	end  -- end while
+
+end -- end main function
+
+
+main();
 
 --~ for i=1,NUMBER do
 --~ 	local str = ""
