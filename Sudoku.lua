@@ -8,21 +8,8 @@ local G = {3,9,4,7,0,0,5,0,0};
 local H = {5,1,0,0,0,4,0,7,0};
 local I = {7,2,0,0,9,5,4,0,6};
 
-
-local V1 = {0,0,0,0,0,0,0,0,0,0};
-local V2 = {0,0,0,0,0,0,0,0,0,0};
-local V3 = {0,0,0,0,0,0,0,0,0,0};
-local V4 = {0,0,0,0,0,0,0,0,0,0};
-local V5 = {0,0,0,0,0,0,0,0,0,0};
-local V6 = {0,0,0,0,0,0,0,0,0,0};
-local V6 = {0,0,0,0,0,0,0,0,0,0};
-local V7 = {0,0,0,0,0,0,0,0,0,0};
-local V8 = {0,0,0,0,0,0,0,0,0,0};
-local V9 = {0,0,0,0,0,0,0,0,0,0};
-
 local Result ={{1,2,3,4,5,6,7,8,9},{9,8,7,6,5,4,3,2,1},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0}};
-
 
 local sudoku = 45;
 local NUMBER = 9;
@@ -46,7 +33,6 @@ function VerifySudoku()
 	local verticals = {};
 	-- count the horizon of 'Result'
 	for i=1 ,NUMBER do
-
 		local square_number=1;
 		local horizon = {};
 		horizon = Result[i];
@@ -67,14 +53,19 @@ function VerifySudoku()
 			end
 
 			-- dump square array from 'Result'
-			if(math.floor((k-1)/3+1)+math.floor((i-1)/3)*3) ==nil then
+			local number = (math.floor((k-1)/3+1)+math.floor((i-1)/3)*3);
+			print("i:"..i..",k:"..k..",number:"..number);
+			if square[number] ==nil then
 				local squ = {};
-				squ[i]= horizon[k];
-				table.insert(verticals,var);
+				squ[1]= horizon[k];
+				table.insert(square,squ);
+				print("new");
 			else
-				table.insert(verticals[k],horizon[k]);
+				table.insert(square[number],horizon[k]);
+				print("insert");
 			end
 		end
+		print_r(square);
 	end  -- end horizon
 
 	-- count the vertial of 'Result'
@@ -88,15 +79,15 @@ function VerifySudoku()
 
 	-- count the square of 'Result'
 	for j in ipairs(square) do
-		str ="";
-		for p in ipairs(square[j]) do
-			str=str.."|"..square_number[j][p];
-		end
---~ 		local list = {};
---~ 		if not AddtionNumberForArray(list) then
---~ 			print("verify failed");
---~ 			return false;
---~ 		end
+--~		str ="";
+--~		for p in ipairs(square[j]) do
+--~			str=str.."|"..square[j][p];
+--~		end
+ 		local list = {};
+ 		if not AddtionNumberForArray(list) then
+ 			print("verify failed");
+ 			return false;
+ 		end
 	end
 
 end  -- end VerifySudoku
@@ -126,6 +117,22 @@ function print_r(arr, indentLevel)
 end
 
 VerifySudoku();
+
+function main()
+	local sudoku={};
+	table.insert(sudoku,A);
+	table.insert(sudoku,B);
+	table.insert(sudoku,C);
+	table.insert(sudoku,D);
+	table.insert(sudoku,E);
+	table.insert(sudoku,F);
+	table.insert(sudoku,G);
+	table.insert(sudoku,H);
+	table.insert(sudoku,I);
+	
+	
+end
+
 
 --~ for i=1,NUMBER do
 --~ 	local str = ""
