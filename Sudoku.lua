@@ -27,19 +27,19 @@ function AddtionNumberForArray(Array)
 	end
 end
 
-function VerifySudoku(Verifysudoku)
+function VerifySudoku(sudokuList)
 	local square = {};
 	local times = 1;
 	local verticals = {};
 
-	if(#Verifysudoku ~= NUMBER) then
+	if(#sudokuList ~= NUMBER) then
 		print("count of 'Verifysudoku' its not 9  ");
 		return false;
 	end
 	-- count the horizon of 'Result'
 	for i=1 ,NUMBER do
 		local horizon = {};
-		horizon = Verifsudoku[i];
+		horizon = sudokuList[i];
 		if not AddtionNumberForArray(horizon) then
 			print("verify failed");
 			return false;
@@ -57,7 +57,7 @@ function VerifySudoku(Verifysudoku)
 
 			-- dump square array from 'Result'
 			local number = (math.floor((k-1)/3+1)+math.floor((i-1)/3)*3);
-			print("i:"..i..",k:"..k..",number:"..number);
+--~ 			print("i:"..i..",k:"..k..",number:"..number);
 			if square[number] ==nil then
 				local squ = {};
 				squ[1]= horizon[k];
@@ -66,7 +66,6 @@ function VerifySudoku(Verifysudoku)
 				table.insert(square[number],horizon[k]);
 			end
 		end
-		print_r(square);
 	end  -- end horizon
 
 	-- count the vertial of 'Result'
@@ -156,6 +155,37 @@ function PrintSudoku(Array)
 	print("end");
 end --end PrintSudoku
 
+
+function SudukuIniticalize(Array)
+
+	local squ={{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
+	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
+	local ver = {{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
+	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
+	local hor = {{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
+	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
+
+	print("------------------");
+	PrintSudoku(Array);
+	for i in ipairs(Array) do
+		for j=1,NUMBER do
+			local n = Array[i][j];
+			if n~=0 then
+				-- fill data to 'HorizonsNumber'
+				hor[i][n] = 0;
+				ver[j][n] = 0;
+
+				local num = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
+				squ[num][n] =0;
+			end
+		end
+	end	  -- end inititalize
+	print_r(hor);
+	print_r(ver);
+	print_r(squ);
+	return hor,ver,squ;
+end
+
  ---------------------------------
  --		Main function			--
  ---------------------------------
@@ -173,71 +203,106 @@ end --end PrintSudoku
 	table.insert(SUDOKU,H);
 	table.insert(SUDOKU,I);
 
-	-- inititalize
-	local SquaresNumber={{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
-	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
-	local VerticalsNumber = {{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
-	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
-	local HorizonsNumber = {{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
-	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
+	-- inititalize , 'HorizonsNumber' its  the may of remain number for the Horizon line . as
+	-- 'VerticalsNumber' its for vertical line ,as same as 'SquaresNumber'
+	local HorizonsNumber={};
+	local VerticalsNumber={};
+	local SquaresNumber={};
+	HorizonsNumber,VerticalsNumber,SquaresNumber=SudukuIniticalize(SUDOKU);
 
-	print("------------------");
-	for i in ipairs(SUDOKU) do
-		for j=1,NUMBER do
-			local n = SUDOKU[i][j];
-			if n~=0 then
-				-- fill data to 'HorizonsNumber'
-				HorizonsNumber[i][n] = 0;
-				VerticalsNumber[j][n] = 0;
-
-				local num = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
-				SquaresNumber[num][n] =0;
-			end
-		end
-	end	  -- end inititalize
 
 	-- process fill 'SUDOKU'
+
 	Result = SUDOKU;
 
 	PrintSudoku(Result);
-
+	local index = 0;
+	local IndexList = {};
+	local isStop = false;
 	while(true) do
-		for i in ipairs(Result) do
-			for j in ipairs(Result[i]) do
-
-				local n = Result[i][j];
-				-- if the grid is empty
-				if(n==0) then
-					-- get number from array.
-					for k in ipairs(HorizonsNumber[i]) do
+		if #IndexList == 0 then
+			-- begin loop he 'Result'
+			for i in ipairs(Result) do
+				if(isStop) then
+					break;
+				end
+				for j in ipairs(Result[i]) do
+					index = index+1;
+					local n = Result[i][j];
+					-- if the grid is empty
+					if(n==0) then
 						local num = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
-						local ho = HorizonsNumber[i][k];
-						if ho~=0 and (VerifySameNumber(VerticalsNumber[j],ho ) or VerifySameNumber(SquaresNumber[num],ho )) then
-							print("i="..i..",j="..j..",ho="..ho);
-							HorizonsNumber[i][k] = 0;
-							VerticalsNumber[j][ho]=0;
-							SquaresNumber[num][ho]=0;
-							Result[i][j] = ho;
+						local re = 0;
+
+						-- get number from array.
+						for k in ipairs(HorizonsNumber[i]) do
+							local ho = HorizonsNumber[i][k];
+							if ho~=0 and (VerifySameNumber(VerticalsNumber[j],ho ) or VerifySameNumber(SquaresNumber[num],ho )) then
+								re = ho;
+								break;
+							end
+						end
+
+						if(re ~=0) then
+							print("i:"..i..",j:"..j..",re ==== "..re..",index:"..index);
+							local ilist = {index,re};
+							table.insert(IndexList,ilist);
+							HorizonsNumber[i][re] = 0;
+							VerticalsNumber[j][re]=0;
+							SquaresNumber[num][re]=0;
+							Result[i][j] = re;
+						else
+							print("re ==== 0");
+--~ 							Result[i][j] = -1;
+							isStop = true;
 							break;
 						end
 					end
 				end
+			end --end loop 'Result'
+		else
+--~ 			PrintSudoku(Result);
+--~ 			print_r(IndexList);
+--~ 			return;
+
+			-- when count its failed ,what queue to selece , from first or end?
+			for indx in ipairs(IndexList) do
+				local num = IndexList[indx][1];
+				local hNum = IndexList[indx][2];
+				local x = math.floor(num/NUMBER);
+				local y = num%NUMBER;
+				for i=x,NUMBER do
+					for j=y,NUMBER do
+
+					end
+				end
+
+				print("indexList ==> num:"..num..",i:"..i..",j:"..j)
+
+--~ 				indexCount = indexCount - 1;
 			end
-		end --end
+		end -- end if
 
 		-- verify SUDOKU
-		PrintSudoku(Result);
-		PrintSudoku(HorizonsNumber);
-		PrintSudoku(VerticalsNumber);
-		PrintSudoku(SquaresNumber);
-		break;
+
+		if VerifySudoku(Result) then
+			print("-----------------------")
+			print("---- end of Result ----")
+			print("-----------------------")
+			PrintSudoku(Result);
+
+			PrintSudoku(HorizonsNumber);
+			PrintSudoku(VerticalsNumber);
+			PrintSudoku(SquaresNumber);
+			break;
+		end
+
 
 	end  -- end while
-
 end -- end main function
 
 
-main();
+--~ main();
 
 --~ for i=1,NUMBER do
 --~ 	local str = ""
@@ -268,3 +333,44 @@ main();
 --~ 		print("val="..list[i][j]);
 --~ 	end
 --~ end
+
+
+local values={{1,2,3,4},{24},{9,8},{2}};
+str = "";
+for i=1,#values
+
+--~ for i=1,#values[1] do
+--~ 	str = str..values[1][i]..",";
+--~ 	for i=1,#values[2] do
+--~ 		str = str..values[2][i]..",";
+--~ 		for i=1,#values[3] do
+--~ 			str = str..values[3][i]..",";
+--~ 			for i=1,#values[4] do
+--~ 				str = str..values[4][i]..",";
+--~ 				print(str);
+--~ 				str = "";
+--~ 				break;
+--~ 			end
+--~ 		end
+--~ 	end
+--~ end
+
+--~ for i in ipairs(values) do
+--~ 	str = "";
+--~ 	if (i+1 <=#values) then
+--~ 		print("i:"..i);
+--~ 		str = "";
+--~ 		for j=1,#values[i] do
+--~ 			for k =1 ,#values[i+1] do
+--~ 				str=str..","..values[i][j]..","..values[i+1][k]..",";
+--~ 				print("str:"..str);
+
+--~ 			end
+--~ 		end
+--~ 	end
+--~ end
+
+
+
+
+
