@@ -1,0 +1,119 @@
+function main()
+
+	local SUDOKU={};
+	table.insert(SUDOKU,A);
+	table.insert(SUDOKU,B);
+	table.insert(SUDOKU,C);
+	table.insert(SUDOKU,D);
+	table.insert(SUDOKU,E);
+	table.insert(SUDOKU,F);
+	table.insert(SUDOKU,G);
+	table.insert(SUDOKU,H);
+	table.insert(SUDOKU,I);
+
+	-- inititalize , 'HorizonsNumber' its  the may of remain number for the Horizon line . as
+	-- 'VerticalsNumber' its for vertical line ,as same as 'SquaresNumber'
+	local HorizonsNumber={};
+	local VerticalsNumber={};
+	local SquaresNumber={};
+	HorizonsNumber,VerticalsNumber,SquaresNumber=SudukuIniticalize(SUDOKU);
+
+
+	-- process fill 'SUDOKU'
+
+	Result = SUDOKU;
+
+--~ 	PrintSudoku(Result);
+--~ 	PrintSudoku(HorizonsNumber);
+--~ 	PrintSudoku(VerticalsNumber);
+--~ 	PrintSudoku(SquaresNumber);
+	local index = 0;
+	local IndexList = {};
+	local isStop = false;
+	while(true) do
+		if #IndexList == 0 then
+			-- begin loop he 'Result'
+			for i in ipairs(Result) do
+				if(isStop) then
+					break;
+				end
+				for j in ipairs(Result[i]) do
+					index = index+1;
+					local n = Result[i][j];
+					-- if the grid is empty
+					if(n==0) then
+						local num = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
+						local re = 0;
+
+						-- get number from array.
+						for k,val in ipairs(HorizonsNumber[i]) do
+							local ho = val;
+--~ 							if ho~=0 and (VerifySameNumber(Result[j],ho ) or VerifySameNumber(SquaresNumber[num],ho )) then
+--~ 								re = ho;
+--~ 								break;
+--~ 							end
+							if ho~=0 and not (VerifySameNumberWithSudokuList(Result,index, ho))  then
+								re = ho;
+								print("i:"..i..",j:"..j..",re ==== "..re..",index:"..index);
+								break;
+							end
+
+						end
+
+						if(re ~=0) then
+							print("i:"..i..",j:"..j..",re ==== "..re..",index:"..index);
+							local ilist = {index,re};
+							table.insert(IndexList,ilist);
+							HorizonsNumber[i][re] = 0;
+							VerticalsNumber[j][re]=0;
+							SquaresNumber[num][re]=0;
+							Result[i][j] = re;
+						else
+							print("re ==== 0");
+							Result[i][j] = -1;
+							isStop = true;
+							break;
+						end
+					end
+				end
+			end --end loop 'Result'
+		else
+			PrintSudoku(Result);
+ 			print_r(IndexList);
+ 			return;
+
+
+			-- when count its failed ,what queue to selece , from first or end?
+			for indx in ipairs(IndexList) do
+				local num = IndexList[indx][1];
+				local hNum = IndexList[indx][2];
+				local x = math.floor(Index/NUMBER)+1;
+				local y = (Index%NUMBER) == 0 and 9 or Index%NUMBER;
+				for i=x,NUMBER do
+					for j=y,NUMBER do
+
+					end
+				end
+
+				--print("indexList ==> num:"..num..",i:"..i..",j:"..j)
+
+--~ 				indexCount = indexCount - 1;
+			end
+		end -- end if
+
+		-- verify SUDOKU
+
+		if VerifySudoku(Result) then
+			print("-----------------------")
+			print("---- end of Result ----")
+			print("-----------------------")
+
+			PrintSudoku(HorizonsNumber);
+			PrintSudoku(VerticalsNumber);
+			PrintSudoku(SquaresNumber);
+			break;
+		end
+
+
+	end  -- end while
+end -- end main function

@@ -90,6 +90,33 @@ function VerifySudoku(sudokuList)
 
 end  -- end VerifySudoku
 
+function VerifySameNumber(List,Num)
+	for i,v in ipairs(List) do
+		if v==Num then
+			return true;
+		end
+	end
+	return false
+end -- end VerifySameNumber
+
+
+function VerifySameNumberWithSudokuList(SuArrray , Index, ValueNumber)
+	local x = math.floor(Index/NUMBER)+1;
+	local y = (Index%NUMBER) == 0 and 9 or Index%NUMBER;
+	local num = (math.floor((y-1)/3+1)+math.floor((x-1)/3)*3);
+	print("Index:"..Index.."x:"..x..",y:"..y..",num:"..num..",ValueNumber:"..ValueNumber);
+	for i ,iv in ipairs(SuArrray) do
+		for j,jv in ipairs(iv) do
+			num1 = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
+			if ((j==y) or num==num1) and (jv == ValueNumber) then
+				return true;
+			end
+		end
+	end
+	return false;
+
+end -- end VerifySameNumberWithSudokuList
+
 
 function print_r(arr, indentLevel)
     local str = ""
@@ -104,14 +131,15 @@ function print_r(arr, indentLevel)
         indentStr = indentStr.."\t"
     end
 
-    for index,value in pairs(arr) do
-        if type(value) == "table" then
-            str = str..indentStr..index..": \n"..print_r(value, (indentLevel + 1))
-        else
-            str = str..indentStr..index..": "..value.."\n"
-        end
-    end
-    return str
+	for index,value in pairs(arr) do
+		if type(value) == "table" then
+			str = str..indentStr..index..": \n"..print_r(value, (indentLevel + 1))
+		else
+			str = str..indentStr..index..": "..value.."\n"
+		end
+	end
+	return str
+
 end
 
 
@@ -122,16 +150,6 @@ function GetNumber(List )
 		end
 	end
 end
-
-
-function VerifySameNumber(List,Num)
-	for i in ipairs(List) do
-		if List[i]==Num then
-			return true;
-		end
-	end
-	return false
-end -- end VerifySameNumber
 
 
 function PrintSudoku(Array)
@@ -165,7 +183,7 @@ function SudukuIniticalize(Array)
 	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
 
 	print("------------------");
-	PrintSudoku(Array);
+--~ 	PrintSudoku(Array);
 	for i in ipairs(Array) do
 		for j=1,NUMBER do
 			local n = Array[i][j];
@@ -179,9 +197,9 @@ function SudukuIniticalize(Array)
 			end
 		end
 	end	  -- end inititalize
-	print_r(hor);
-	print_r(ver);
-	print_r(squ);
+--~ 	print_r(hor);
+--~ 	print_r(ver);
+--~ 	print_r(squ);
 	return hor,ver,squ;
 end
 
@@ -214,96 +232,66 @@ end
 
 	Result = SUDOKU;
 
-	PrintSudoku(Result);
+--~ 	PrintSudoku(Result);
+--~ 	PrintSudoku(HorizonsNumber);
+--~ 	PrintSudoku(VerticalsNumber);
+--~ 	PrintSudoku(SquaresNumber);
 	local index = 0;
 	local IndexList = {};
 	local isStop = false;
-	while(true) do
-		if #IndexList == 0 then
-			-- begin loop he 'Result'
-			for i in ipairs(Result) do
-				if(isStop) then
-					break;
-				end
-				for j in ipairs(Result[i]) do
-					index = index+1;
-					local n = Result[i][j];
-					-- if the grid is empty
-					if(n==0) then
-						local num = (math.floor((j-1)/3+1)+math.floor((i-1)/3)*3);
-						local re = 0;
-
-						-- get number from array.
-						for k in ipairs(HorizonsNumber[i]) do
-							local ho = HorizonsNumber[i][k];
-							if ho~=0 and (VerifySameNumber(VerticalsNumber[j],ho ) or VerifySameNumber(SquaresNumber[num],ho )) then
-								re = ho;
-								break;
-							end
-						end
-
-						if(re ~=0) then
-							print("i:"..i..",j:"..j..",re ==== "..re..",index:"..index);
-							local ilist = {index,re};
-							table.insert(IndexList,ilist);
-							HorizonsNumber[i][re] = 0;
-							VerticalsNumber[j][re]=0;
-							SquaresNumber[num][re]=0;
-							Result[i][j] = re;
-						else
-							print("re ==== 0");
---~ 							Result[i][j] = -1;
-							isStop = true;
-							break;
-						end
+	for i in ipairs(Result) do
+		for j in ipairs(Result[i]) do
+			index = index+1;
+			local n = Result[i][j];
+			if(n==0) then
+				local probList={};
+				for prbIdx,prbVal in ipairs(HorizonsNumber[i]) do
+					print("prbval:"..prbVal);
+					if prbVal~= 0 then
+						table.insert(probList,prbVal);
 					end
 				end
-			end --end loop 'Result'
-		else
-			PrintSudoku(Result);
- 			print_r(IndexList);
- 			return;
-
---[[
-			-- when count its failed ,what queue to selece , from first or end?
-			for indx in ipairs(IndexList) do
-				local num = IndexList[indx][1];
-				local hNum = IndexList[indx][2];
-				local x = math.floor(num/NUMBER);
-				local y = num%NUMBER;
-				for i=x,NUMBER do
-					for j=y,NUMBER do
-
-					end
-				end
-
-				--print("indexList ==> num:"..num..",i:"..i..",j:"..j)
-
---~ 				indexCount = indexCount - 1;
+				local ilist = {index,probList};
+				table.insert(IndexList,ilist);
 			end
-]]
-		end -- end if
+		end -- end for loop 'Result[i]'
+	end -- end for loop 'Result'
 
-		-- verify SUDOKU
+	print_r(IndexList);
 
-		if VerifySudoku(Result) then
-			print("-----------------------")
-			print("---- end of Result ----")
-			print("-----------------------")
-			PrintSudoku(Result);
-
-			PrintSudoku(HorizonsNumber);
-			PrintSudoku(VerticalsNumber);
-			PrintSudoku(SquaresNumber);
-			break;
-		end
-
-
-	end  -- end while
 end -- end main function
 
 
--- main();
+local li = {{25,{1}},{27,{1,2}},{30,{2}},{31,{3}},
+{32,{4}},{33,{8}},{35,{2,3,4,8,9}}};
+--~ print_r(li);
+
+function CallNext(IndexList, Index , StrValue,SqueueList)
+	if Index >#IndexList then
+		print("return StrValue:"..StrValue);
+		return StrValue,SqueueList;
+	else
+		for numidx, numval in ipairs(IndexList[Index][2]) do
+			i=Index+1;
+			local position = IndexList[Index][1];
+			print("position:"..position..",StrValue:"..StrValue);
+			local lis = SqueueList;
+			table.insert(lis,numval)
+--~ 			lis = SqueueList;
+			numval = StrValue ..","..numval;
+			rs,rv = CallNext(IndexList,i,numval,lis)
+			if(rv~=nil) then
+				print_r(rv);
+				print(" rs ===> "..rs);
+			end
+		end
+	end
+end -- end funciotn 'CallNext'
+CallNext(li,1,"",{});
+
+
+--~ main();
+
 
 --~ for i=1,NUMBER do
 --~ 	local str = ""
@@ -364,13 +352,10 @@ end -- end main function
 --~ 			for k =1 ,#values[i+1] do
 --~ 				str=str..","..values[i][j]..","..values[i+1][k]..",";
 --~ 				print("str:"..str);
-
 --~ 			end
 --~ 		end
 --~ 	end
 --~ end
-
-
 
 
 

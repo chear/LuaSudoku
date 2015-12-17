@@ -15,12 +15,13 @@ for i in ipairs(values) do
 end
 function CallNextArray(List, Index,StrValue)
 	if Index >#List then
+		print("Index:"..Index..",StrValue:{"..StrValue.."}");
 		return StrValue;
 	else
 		for idx ,val in ipairs(List[Index]) do
 			i=Index+1
-			--print("Index:"..Index..",StrValue:"..StrValue..",val:"..val);
 			val = StrValue ..","..val;
+			print("Index:"..Index..",StrValue:{"..StrValue.."},val:"..val);
 			str = CallNextArray(List,i,val);
 			if (str~=nil) then
 				print(" str ===> "..str);
