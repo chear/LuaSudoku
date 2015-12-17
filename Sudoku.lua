@@ -157,7 +157,6 @@ end --end PrintSudoku
 
 
 function SudukuIniticalize(Array)
-
 	local squ={{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
 	{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9}};
 	local ver = {{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},{1,2,3,4,5,6,7,8,9},
@@ -261,10 +260,11 @@ end
 				end
 			end --end loop 'Result'
 		else
---~ 			PrintSudoku(Result);
---~ 			print_r(IndexList);
---~ 			return;
+			PrintSudoku(Result);
+ 			print_r(IndexList);
+ 			return;
 
+--[[
 			-- when count its failed ,what queue to selece , from first or end?
 			for indx in ipairs(IndexList) do
 				local num = IndexList[indx][1];
@@ -277,10 +277,11 @@ end
 					end
 				end
 
-				print("indexList ==> num:"..num..",i:"..i..",j:"..j)
+				--print("indexList ==> num:"..num..",i:"..i..",j:"..j)
 
 --~ 				indexCount = indexCount - 1;
 			end
+]]
 		end -- end if
 
 		-- verify SUDOKU
@@ -302,7 +303,7 @@ end
 end -- end main function
 
 
---~ main();
+-- main();
 
 --~ for i=1,NUMBER do
 --~ 	local str = ""
@@ -335,9 +336,8 @@ end -- end main function
 --~ end
 
 
-local values={{1,2,3,4},{24},{9,8},{2}};
-str = "";
-for i=1,#values
+
+
 
 --~ for i=1,#values[1] do
 --~ 	str = str..values[1][i]..",";
